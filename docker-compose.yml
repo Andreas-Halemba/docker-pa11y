@@ -11,6 +11,8 @@ services:
       - ./production.json:/dashboard/config/production.json
     links:
       - mongo:mongodb
+    depends_on:
+      - mongo
 
   mongo:
     image: mongo:4.4
@@ -28,3 +30,5 @@ services:
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
       ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongo
