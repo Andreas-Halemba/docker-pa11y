@@ -1,14 +1,30 @@
-# pa11y-dashboard
-web:
-  # Build the image off of Dockie
-  # https://github.com/robloach/dockie
-  #image: robloach/pa11y:dashboard
-  build: .
-  ports:
-    - "8000:4000"
-  links:
-    - database:mongodb
-database:
-  image: mongo:3.2
-  ports:
-    - "27017"
+version: "3"
+services:
+  web:
+    # Build the image off of Dockie
+    # https://github.com/robloach/dockie
+    #image: robloach/pa11y:dashboard
+    build: .
+    ports:
+      - "8000:4000"
+    volumes:
+      - ./production.json:/dashboard/config/production.json
+    links:
+      - mongo:mongodb
+
+  mongo:
+    image: mongo:4.4
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH: false
